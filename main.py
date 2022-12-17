@@ -11,16 +11,17 @@ pygame.display.set_caption("GameOfLife")
 bg = 25, 25, 25
 screen.fill(bg)
 
-celdas = (100, 60)
+celdas = (100, 50)
 nxC, nyC = celdas[0], celdas[1]
 # dev config 40, 25
-min_xC, min_yC = 40, 25
+min_xC, min_yC = 40, 20
 # dev config 100, 50
-max_xC, max_yC = 120, 75
+max_xC, max_yC = 120, 60
 
 dimCW = screen_width / nxC
 dimCH = screen_height /nyC
-map = [[random.randint(0, 1) for _ in range(nxC)] for _ in range(nyC)]
+#map = [[random.randint(0, 1) for _ in range(nxC)] for _ in range(nyC)]
+map = [[0 for _ in range(nxC)] for _ in range(nyC)]
 
 def neighbors(x, y, map):
     sum = 0
@@ -148,9 +149,21 @@ while running:
                     #map = [[random.randint(0, 1) for _ in range(nxC)] for _ in range(nyC)]
                 else: print("Tamaño máximo alcanzado.")
                 print("Mouse wheel scrolled down")
+        mouseClick = pygame.mouse.get_pressed()
+        if(sum(mouseClick) > 0):
+            posX, posY = pygame.mouse.get_pos()
+            celX, celY = int(np.floor(posX / dimCW)), int(np.floor(posY / dimCH))
+            map[celY][celX] = 1 if map[celY][celX] == 0 else 0
+            if(map[celY][celX]):
+                pygame.draw.rect(screen, (255, 255, 255), ((celX * dimCW) + 0.8, (celY * dimCH) + 1, dimCW - 1, dimCH -1))
+            else:
+                if(start):
+                    pygame.draw.rect(screen, (0, 0, 0), ((celX * dimCW) + 0.8, (celY * dimCH) + 1, dimCW - 1, dimCH -1))
+                else:
+                    pygame.draw.rect(screen, bg, ((celX * dimCW) + 0.8, (celY * dimCH) + 1, dimCW - 1, dimCH -1))
 
                 
-    clock.tick(120)
+    #clock.tick(30)
     # Update Display Frames     
     pygame.display.update()
                 
